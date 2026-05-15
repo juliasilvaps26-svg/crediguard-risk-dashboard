@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { jsPDF } from "jspdf";
 import { Search, Loader2, AlertCircle, CheckCircle, Clock, TrendingDown, Download } from "lucide-react";
 import { useHistory } from "@/contexts/HistoryContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -401,7 +402,7 @@ export default function ConsultaCNPJ() {
                 </p>
                 <Button
                   onClick={() => {
-                    const doc = new (window as any).jsPDF();
+                    const doc = new jsPDF();
                     const pageWidth = doc.internal.pageSize.getWidth();
                     const pageHeight = doc.internal.pageSize.getHeight();
                     let yPosition = 20;

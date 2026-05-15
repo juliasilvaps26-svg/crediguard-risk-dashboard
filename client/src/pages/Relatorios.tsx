@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { jsPDF } from "jspdf";
 import { useHistory } from "@/contexts/HistoryContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ export default function Relatorios() {
   );
 
   const gerarPDFIndividual = (item: any) => {
-    const doc = new (window as any).jsPDF();
+    const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     let yPosition = 20;
