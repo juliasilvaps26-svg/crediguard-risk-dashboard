@@ -1,0 +1,35 @@
+{
+  "build_command": "pnpm run build",
+  "capabilities": [],
+  "dev_command": "pnpm run dev",
+  "env_vars": {},
+  "experiments": null,
+  "git_remote": {
+    "repo_url": "s3://vida-prod-gitrepo/webdev-git/310519663222979249/VQDY9iYE7rZksX5THRnLqp",
+    "access_key_id": "ASIAZV3A2ECZGUGJWO3F",
+    "secret_access_key": "fawK7kc4iF54BbaeyS+N0SiYkj9ESD4ZHM9kVRTX",
+    "session_token": "IQoJb3JpZ2luX2VjELX//////////wEaCXVzLWVhc3QtMSJIMEYCIQDRZAo/ytnkmUAsNLTgh5zaYzy07p/s+298lwikHwLndwIhAO0JZkDKzTukwF9qPwJ8uj5VGk5aMv+1DdqtJwn63L+aKvYDCH0QBBoMNjY1Mzg2MDk4ODY2IgwItolzjSolyuU3SUcq0wPWnVz2wGhdmWxP4TDRO9gNtgOZ6uHI9FSZJRWIYqusn3k6Clxwz+dz3r4TU67hvT53LePX263h/GqWe78MWe+VWCPgbnTPeg6PnjzGt55haOXRxsqbxy6WhXv0cdvqP5d0qs8ZI0hJYyrU7i7NkPAWT8DdHD+IvS/fgL2nsFQneyUzTLVT9nDjuEslEmKlRo5nv4Pa3cDiEyk7LLT8V9iTzBA1dWpaOV6WGXfwbNcek2rD6U8FReaiOt1ewULaDxX8jwc0U00zRBIU00cpaLEVjksoJ333ANZdJwwIemwA2hsM19MgaJrRUwhOcWXkBIqWsO31wguFKCZ6HHNnJMKEeaTYWSrCTxT2UtdnLuqm1EVxSgjwgT5/ok0IDv5NLX2AvSQ7SKNUTvcbdGrvGHkf6gITkGw5i9S+1pz/F5aE3F/quSqmH91XeHj553BgmhDYnEIsi8MBZFQYNJ9Weq36ZSkaxbwLEtNY+soOg5wFSAkoC8r5dcPMX8xvMrTiL7GaGms9BCRhUF4Y0CO1A8f1LFIyIHIG0S5WQLd5zSUHBkjWQYi7mQjovEB5MTYIkR3RiPfGwyNjn5kf1ynb4PHZodfMjCiE/vOQrMj97Om85NZNbzDRgJ7QBjqcAdIzJPIL4kxQkyYaPrxv8tGbj8om/HrWRSwPxQdhwci5nWMDLlwOy0bKO7HlAOqWdwHPAC7NY7j0BdGrgNHYI71m+SgG1OeeB0vER8A75zR90aKcHH6/AFdQpRI1cWLPgXm9odvgLtp/sLgn4ZJ7XLp4NQn0t8UAtSuuYQandXAWAGQcLJiscLQclgSiSn5+AvVAG7Ri3kVHKG6mhg==",
+    "expiration": "2026-05-16T08:21:37.000Z"
+  },
+  "name": "crediguard-risk-dashboard",
+  "path": "/home/ubuntu/crediguard-risk-dashboard",
+  "port": 3000,
+  "secrets": {
+    "BUILT_IN_FORGE_API_KEY": "3jj25LXWU4tBJMsQDhsfDY",
+    "BUILT_IN_FORGE_API_URL": "https://forge.manus.ai",
+    "JWT_SECRET": "AnKQxHniDs58ZQAvcPs4yq",
+    "OAUTH_SERVER_URL": "https://api.manus.im",
+    "OWNER_NAME": "Júlia Silva",
+    "OWNER_OPEN_ID": "c64arkTMVKcJZSmuwSfJmV",
+    "VITE_ANALYTICS_ENDPOINT": "https://manus-analytics.com",
+    "VITE_ANALYTICS_WEBSITE_ID": "76f30d45-b124-449b-bda6-f5cf53c635af",
+    "VITE_APP_ID": "VQDY9iYE7rZksX5THRnLqp",
+    "VITE_APP_LOGO": "",
+    "VITE_APP_TITLE": "CrediGuard - Dashboard de Risco",
+    "VITE_FRONTEND_FORGE_API_KEY": "XvhbNZPo2fAXCpXxS6e7jo",
+    "VITE_FRONTEND_FORGE_API_URL": "https://forge.manus.ai",
+    "VITE_OAUTH_PORTAL_URL": "https://manus.im"
+  },
+  "template_id": "web-static",
+  "test_command": "pnpm test"
+}
