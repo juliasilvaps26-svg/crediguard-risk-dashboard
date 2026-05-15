@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { jsPDF } from "jspdf";
+import { nanoid } from "nanoid";
 import { Search, Loader2, AlertCircle, CheckCircle, Clock, TrendingDown, Download } from "lucide-react";
 import { useHistory } from "@/contexts/HistoryContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -173,7 +174,7 @@ export default function ConsultaCNPJ() {
 
       // Adicionar ao histórico
       adicionarConsulta({
-        id: Date.now().toString(),
+        id: nanoid(),
         cnpj: cnpjData.cnpj,
         razaoSocial: cnpjData.razao_social,
         riskScore: Math.max(0, risk.score),
