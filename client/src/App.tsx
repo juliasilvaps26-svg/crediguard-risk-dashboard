@@ -4,10 +4,12 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { HistoryProvider } from "./contexts/HistoryContext";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import ConsultaCNPJ from "./pages/ConsultaCNPJ";
 import Perfil from "./pages/Perfil";
+import Relatorios from "./pages/Relatorios";
 
 
 function Router() {
@@ -16,6 +18,7 @@ function Router() {
       <Route path={"/"} component={Dashboard} />
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/consulta-cnpj"} component={ConsultaCNPJ} />
+      <Route path={"/relatorios"} component={Relatorios} />
       <Route path={"/perfil"} component={Perfil} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
@@ -36,12 +39,14 @@ function App() {
         defaultTheme="light"
         // switchable
       >
-        <TooltipProvider>
-          <Toaster />
-          <Layout>
-            <Router />
-          </Layout>
-        </TooltipProvider>
+        <HistoryProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Layout>
+              <Router />
+            </Layout>
+          </TooltipProvider>
+        </HistoryProvider>
       </ThemeProvider>
     </ErrorBoundary>
   );

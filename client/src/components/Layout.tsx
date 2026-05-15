@@ -8,6 +8,7 @@ import {
   X,
   LogOut,
   Settings,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -46,6 +47,11 @@ export default function Layout({ children }: LayoutProps) {
       label: "Consulta CNPJ",
       href: "/consulta-cnpj",
       icon: Search,
+    },
+    {
+      label: "Relatorios",
+      href: "/relatorios",
+      icon: FileText,
     },
     {
       label: "Perfil",

@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { TrendingUp, AlertCircle, CheckCircle, Clock } from "lucide-react";
+import { TrendingUp, AlertCircle, CheckCircle, Clock, History, ArrowRight } from "lucide-react";
+import { useHistory } from "@/contexts/HistoryContext";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   BarChart,
@@ -24,6 +26,8 @@ import {
 
 export default function Dashboard() {
   const [userTier] = useState("TIER 1");
+  const { historico } = useHistory();
+  const [, navigate] = useLocation();
 
   // Dados simulados de métricas
   const metrics = [
@@ -111,6 +115,20 @@ export default function Dashboard() {
   ];
 
   const isBlurred = userTier === "TIER 1";
+  const ultimasConsultas = historico.slice(0, 3);
+
+  const getRiskColor = (level: string) => {
+    switch (level) {
+      case "BAIXO":
+        return "text-green-600 bg-green-50";
+      case "MÉDIO":
+        return "text-amber-600 bg-amber-50";
+      case "ALTO":
+        return "text-red-600 bg-red-50";
+      default:
+        return "text-gray-600 bg-gray-50";
+    }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -218,6 +236,54 @@ export default function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Histórico Rápido */}
+      {ultimasConsultas.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <History size={20} className="text-blue-600" />
+                <CardTitle className="text-lg">Últimas Consultas</CardTitle>
+              </div>
+              <button
+                onClick={() => navigate("/relatorios")}
+                className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1"
+              >
+                Ver Tudo
+                <ArrowRight size={16} />
+              </button>
+            </div>
+            <CardDescription>Últimas 3 consultas realizadas</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {ultimasConsultas.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
+                >
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-slate-900 truncate">
+                      {item.razaoSocial}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1">
+                      {item.cnpj} • {item.dataConsulta}
+                    </p>
+                  </div>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium flex-shrink-0 ml-2 ${getRiskColor(
+                      item.riskLevel
+                    )}`}
+                  >
+                    {Math.round(item.riskScore)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Risco por Modelo */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

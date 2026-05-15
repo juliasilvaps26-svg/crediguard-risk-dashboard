@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Search, Loader2, AlertCircle, CheckCircle, Clock, TrendingDown } from "lucide-react";
+import { Search, Loader2, AlertCircle, CheckCircle, Clock, TrendingDown, Download } from "lucide-react";
+import { useHistory } from "@/contexts/HistoryContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,7 @@ export default function ConsultaCNPJ() {
   const [riskAnalysis, setRiskAnalysis] = useState<RiskAnalysis | null>(null);
   const [consultasUsadas, setConsultasUsadas] = useState(15);
   const [userTier] = useState("TIER 1");
+  const { adicionarConsulta } = useHistory();
 
   // Formatar CNPJ para exibição
   const formatarCNPJ = (cnpj: string) => {
@@ -167,6 +169,18 @@ export default function ConsultaCNPJ() {
       setResultado(cnpjData);
       const risk = analisarRisco(cnpjData);
       setRiskAnalysis(risk);
+
+      // Adicionar ao histórico
+      adicionarConsulta({
+        id: Date.now().toString(),
+        cnpj: cnpjData.cnpj,
+        razaoSocial: cnpjData.razao_social,
+        riskScore: Math.max(0, risk.score),
+        riskLevel: risk.nivel,
+        dataConsulta: new Date().toLocaleDateString("pt-BR"),
+        municipio: cnpjData.municipio,
+        uf: cnpjData.uf,
+      });
 
       // Incrementar consultas usadas
       setConsultasUsadas((prev) => prev + 1);
@@ -377,13 +391,145 @@ export default function ConsultaCNPJ() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-slate-700">
-                {riskAnalysis.nivel === "BAIXO"
-                  ? "✓ Empresa apresenta baixo risco. Recomenda-se prosseguir com operações normais."
-                  : riskAnalysis.nivel === "MÉDIO"
-                  ? "⚠ Empresa apresenta risco moderado. Recomenda-se análise adicional antes de operações de alto valor."
-                  : "✗ Empresa apresenta alto risco. Recomenda-se cautela extrema ou recusa de operações."}
-              </p>
+              <div className="flex items-start justify-between gap-4">
+                <p className="text-slate-700 flex-1">
+                  {riskAnalysis.nivel === "BAIXO"
+                    ? "✓ Empresa apresenta baixo risco. Recomenda-se prosseguir com operações normais."
+                    : riskAnalysis.nivel === "MÉDIO"
+                    ? "⚠ Empresa apresenta risco moderado. Recomenda-se análise adicional antes de operações de alto valor."
+                    : "✗ Empresa apresenta alto risco. Recomenda-se cautela extrema ou recusa de operações."}
+                </p>
+                <Button
+                  onClick={() => {
+                    const doc = new (window as any).jsPDF();
+                    const pageWidth = doc.internal.pageSize.getWidth();
+                    const pageHeight = doc.internal.pageSize.getHeight();
+                    let yPosition = 20;
+
+                    const primaryColor = [30, 58, 138];
+                    const riskColors: Record<string, number[]> = {
+                      BAIXO: [16, 185, 129],
+                      MÉDIO: [245, 158, 11],
+                      ALTO: [239, 68, 68],
+                    };
+
+                    doc.setFillColor(...primaryColor);
+                    doc.rect(0, 0, pageWidth, 40, "F");
+
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(24);
+                    doc.text("CrediGuard", 20, 25);
+
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(10);
+                    doc.text(`Relatório de Análise de Risco - ${new Date().toLocaleDateString("pt-BR")}`, 20, 35);
+
+                    yPosition = 50;
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(...primaryColor);
+                    doc.text("DADOS DA EMPRESA", 20, yPosition);
+
+                    yPosition += 10;
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    const empresaInfo = [
+                      [`CNPJ: ${resultado.cnpj}`, `Situação: ${resultado.situacao}`],
+                      [`Razão Social: ${resultado.razao_social}`, `Localização: ${resultado.municipio}, ${resultado.uf}`],
+                      [`Nome Fantasia: ${resultado.nome_fantasia}`, `Data Abertura: ${resultado.data_abertura}`],
+                    ];
+
+                    empresaInfo.forEach((row) => {
+                      doc.text(row[0], 20, yPosition);
+                      doc.text(row[1], pageWidth / 2, yPosition);
+                      yPosition += 8;
+                    });
+
+                    yPosition += 5;
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(...primaryColor);
+                    doc.text("ANÁLISE DE RISCO", 20, yPosition);
+
+                    yPosition += 10;
+
+                    const riskColor = riskColors[riskAnalysis.nivel];
+                    doc.setFillColor(...riskColor);
+                    doc.rect(20, yPosition - 5, 50, 30, "F");
+
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFontSize(28);
+                    doc.text(`${Math.round(riskAnalysis.score)}%`, 45, yPosition + 15);
+
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(10);
+                    doc.text("Score de Risco", 20, yPosition + 35);
+
+                    doc.setFillColor(240, 240, 240);
+                    doc.rect(80, yPosition - 5, 50, 30, "F");
+
+                    doc.setTextColor(...riskColor);
+                    doc.setFontSize(16);
+                    doc.text(riskAnalysis.nivel, 105, yPosition + 15);
+
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(10);
+                    doc.text("Nível", 80, yPosition + 35);
+
+                    yPosition += 45;
+
+                    doc.setFontSize(12);
+                    doc.setTextColor(...primaryColor);
+                    doc.text("Fatores Analisados:", 20, yPosition);
+
+                    yPosition += 8;
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    riskAnalysis.fatores.forEach((fator) => {
+                      doc.text(`• ${fator}`, 25, yPosition);
+                      yPosition += 6;
+                    });
+
+                    yPosition += 5;
+
+                    doc.setFontSize(12);
+                    doc.setTextColor(...primaryColor);
+                    doc.text("Recomendações:", 20, yPosition);
+
+                    yPosition += 8;
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    const recomendacao =
+                      riskAnalysis.nivel === "BAIXO"
+                        ? "✓ Empresa apresenta baixo risco. Recomenda-se prosseguir com operações normais."
+                        : riskAnalysis.nivel === "MÉDIO"
+                        ? "⚠ Empresa apresenta risco moderado. Recomenda-se análise adicional antes de operações de alto valor."
+                        : "✗ Empresa apresenta alto risco. Recomenda-se cautela extrema ou recusa de operações.";
+
+                    const splitRecomendacao = doc.splitTextToSize(recomendacao, pageWidth - 40);
+                    doc.text(splitRecomendacao, 20, yPosition);
+
+                    doc.setFontSize(8);
+                    doc.setTextColor(150, 150, 150);
+                    doc.text(
+                      `Relatório gerado em ${new Date().toLocaleString("pt-BR")} | CrediGuard Risk Dashboard`,
+                      20,
+                      pageHeight - 10
+                    );
+
+                    const nomeArquivo = `Relatorio_${resultado.cnpj.replace(/\D/g, "")}_${new Date().getTime()}.pdf`;
+                    doc.save(nomeArquivo);
+                    toast.success("PDF gerado e baixado com sucesso!");
+                  }}
+                  className="ml-4 bg-green-600 hover:bg-green-700 text-white flex-shrink-0"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  PDF
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
