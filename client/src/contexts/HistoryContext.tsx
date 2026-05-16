@@ -27,9 +27,22 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
     const historicoSalvo = localStorage.getItem("crediguard_historico");
     if (historicoSalvo) {
       try {
-        setHistorico(JSON.parse(historicoSalvo));
+        let historicoParsed = JSON.parse(historicoSalvo);
+        
+        // Migração: garantir IDs únicos (remover duplicatas)
+        const idsVistos = new Set<string>();
+        const historicoFiltrado = historicoParsed.filter((item: ConsultaHistorico) => {
+          if (idsVistos.has(item.id)) {
+            return false; // Remove duplicata
+          }
+          idsVistos.add(item.id);
+          return true;
+        });
+        
+        setHistorico(historicoFiltrado);
       } catch (error) {
         console.error("Erro ao carregar histórico:", error);
+        localStorage.removeItem("crediguard_historico");
       }
     }
   }, []);
